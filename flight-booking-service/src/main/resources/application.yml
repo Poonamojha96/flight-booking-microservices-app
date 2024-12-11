@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: flight-booking-service
+  cloud:
+    config:
+      uri: http://localhost:8083
+  config:
+    import: "optional:configserver:http://localhost:8083"
+#  security:
+#    user:
+#      name: user
+#      password: password
+#      roles: USER
+
+
+server:
+  port: 8080
+
+management:
+  health:
+    ping:
+      enabled: true
+
+resilience4j:
+  circuit-breaker:
+    instances:
+      checkAvailability:
+        registerHeathIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+feign:
+  client:
+    config:
+      default:
+        retryer:
+          period: 100 # Initial period to wait before the first retry attempt in ms
+          maxPeriod: 1000 #Maximum period to wait between retry attempts (in milliseconds)
+          maxAttempts: 3
+retry:
+  instances:
+    checkAvailability:
+      maxAttempts: 3
+      waitDuration: 100ms
+

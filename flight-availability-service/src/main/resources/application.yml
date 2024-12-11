@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: flight-availability-service
+  cloud:
+    config:
+      uri: http://localhost:8083
+  config:
+    import: "optional:configserver:http://localhost:8083"
+#  security:
+#    user:
+#      name: user
+#      password: password
+#      roles: USER
+
+server:
+  port: 8081
+
+management:
+  health:
+    ping:
+      enabled: true
